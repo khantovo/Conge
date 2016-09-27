@@ -17,6 +17,12 @@ function UserResource($resource) {
       params: {
         id: 'me'
       }
+    },
+    updateInfo:  {
+      method: 'POST',
+      params: {
+        id: 'update'
+      }
     }
   });
 }

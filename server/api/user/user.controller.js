@@ -5,6 +5,25 @@ import passport from 'passport';
 import config from '../../config/environment';
 import jwt from 'jsonwebtoken';
 
+function handleEntityNotFound(res) {
+  return function(entity) {
+    if (!entity) {
+      res.status(404).end();
+      return null;
+    }
+    return entity;
+  };
+}
+
+function generatePassword(length) {
+    var charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+        retVal = "";
+    for (var i = 0, n = charset.length; i < length; ++i) {
+        retVal += charset.charAt(Math.floor(Math.random() * n));
+    }
+    return retVal;
+}
+
 function validationError(res, statusCode) {
   statusCode = statusCode || 422;
   return function(err) {
@@ -16,6 +35,15 @@ function handleError(res, statusCode) {
   statusCode = statusCode || 500;
   return function(err) {
     res.status(statusCode).send(err);
+  };
+}
+
+function saveUpdates(updates) {
+  return function(entity) {
+    return entity.updateAttributes(updates)
+      .then(updated => {
+        return updated;
+      });
   };
 }
 
@@ -43,6 +71,7 @@ export function index(req, res) {
  * Creates a new user
  */
 export function create(req, res, next) {
+  req.body.password=generatePassword(9);
   var newUser = User.build(req.body);
   newUser.setDataValue('provider', 'local');
   newUser.setDataValue('role', 'user');
@@ -87,6 +116,23 @@ export function destroy(req, res) {
     })
     .catch(handleError(res));
 }
+
+
+// Updates an existing Thing in the DB
+export function update(req, res) {
+  var id=req.body._id;
+  delete req.body._id;
+  return User.find({
+    where: {
+      _id: id
+    }
+  })
+    .then(handleEntityNotFound(res))
+    .then(saveUpdates(req.body))
+    .then(()=>{res.status(204).end();})
+    .catch(handleError(res));
+}
+
 
 /**
  * Change a users password
