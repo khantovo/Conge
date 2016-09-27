@@ -19,7 +19,7 @@ class AdminController {
     console.log('update');
     var _this=this;
     _this.User.updateInfo(user).$promise
-      .then((userUpdated) => {
+      .then(() => {
         _this.users = _this.User.query();
       });
   }
