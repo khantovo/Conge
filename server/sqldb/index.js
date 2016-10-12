@@ -18,4 +18,6 @@ db.Conge = db.sequelize.import('../api/conge/conge.model');
 db.Thing = db.sequelize.import('../api/thing/thing.model');
 db.User = db.sequelize.import('../api/user/user.model');
 
+db.Conge.belongsTo(db.User, {foreignKey:'user' , as:'worker' });
+
 module.exports = db;

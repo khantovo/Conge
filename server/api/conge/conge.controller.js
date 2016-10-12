@@ -11,6 +11,7 @@
 
 import _ from 'lodash';
 import {Conge} from '../../sqldb';
+import {User} from '../../sqldb';
 
 function respondWithResult(res, statusCode) {
   statusCode = statusCode || 200;
@@ -60,7 +61,9 @@ function handleError(res, statusCode) {
 
 // Gets a list of Conges
 export function index(req, res) {
-  return Conge.findAll()
+  return Conge.findAll({
+    include:{model:User , as:'worker'}
+  })
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
