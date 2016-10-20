@@ -24,13 +24,13 @@
           </select>
         </td>
         <td>
-          <input type="text" class="form-control " uib-datepicker-popup
+          <input type="text" class="form-control " uib-datepicker-popup="dd/MM/yyyy"
             is-open="gestion.popupStartDate.opened" close-text="Close"
             ng-model="gestion.newConge.start"
             ng-click="gestion.openStartDate()"/>
         </td>
         <td>
-          <input type="text" class="form-control " uib-datepicker-popup
+          <input type="text" class="form-control " uib-datepicker-popup="dd/MM/yyyy"
             is-open="gestion.popupEndDate.opened" close-text="Close"
             ng-model="gestion.newConge.end"
             ng-click="gestion.openEndDate()"/>
@@ -46,28 +46,28 @@
         </td>
       </tr>
 
-
-      <!--tr ng-repeat="user in gestion.users | orderBy:'name'">
-        <td><strong><input type="text" class="form-control" ng-model="user.name"></strong></td>
+      <tr ng-repeat="conge in gestion.conges">
         <td>
-          <input type="text" class="form-control " uib-datepicker-popup
-            is-open="" close-text="Close"
-            ng-model="" ng-click=""/>
+          <input type="text"  class="form-control" ng-model="conge.worker.name">
         </td>
         <td>
-          <input type="text" class="form-control " uib-datepicker-popup
-            is-open="" close-text="Close"
-            ng-model="" ng-click=""/>
+          <input type="text"  class="form-control" ng-model="conge.startDate">
         </td>
         <td>
-          <input type="number" class="form-control" value="0" style="width:75px;">
+          <input type="text"  class="form-control" ng-model="conge.endDate">
         </td>
         <td>
-          <a ng-click="gestion.update(user)" class="btn btn-default">
-            <span class="fa fa-save fa-lg"></span>
+          <input type="number" class="form-control" value="0"
+          ng-model="conge.duration" style="width:75px;">
+        </td>
+        <td>
+          <a ng-click="gestion.create()" class="btn btn-primary">
+            <span class="fa fa-plus fa-lg"></span>
           </a>
         </td>
-      </tr-->
+      </tr>
+
+
     </tbody>
   </table>
 

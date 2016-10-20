@@ -10,6 +10,7 @@
 'use strict';
 
 import _ from 'lodash';
+import moment from 'moment'
 import {Conge} from '../../sqldb';
 import {User} from '../../sqldb';
 
@@ -64,6 +65,14 @@ export function index(req, res) {
   return Conge.findAll({
     include:{model:User , as:'worker'}
   })
+    .then(results=>{
+      results=JSON.parse(JSON.stringify(results));
+      for(var i in results){
+        results[i].startDate=moment(results[i].start).format("DD MMM YYYY");
+        results[i].endDate=moment(results[i].end).format("DD MMM YYYY");
+      }
+      return results;
+    })
     .then(respondWithResult(res))
     .catch(handleError(res));
 }

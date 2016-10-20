@@ -6,7 +6,7 @@ module.exports = {
 
   // Sequelize connection opions
   sequelize: {
-    uri: 'postgres://postgres:postgresAngelus@localhost:5432/conge', //'postgres://postgres:postgres9AdagP@167.114.250.127:5432/artwork-dev'
+    uri: 'postgres://postgres:localPostgres@localhost:5432/conge', //'postgres://postgres:postgres9AdagP@167.114.250.127:5432/artwork-dev'
     options: {
       logging: false,
       //storage: 'dev.sqlite',

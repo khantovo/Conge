@@ -22,7 +22,6 @@ class GestionComponent {
     this.conges = Conge.query(function (results) {
       console.log(JSON.parse(JSON.stringify(results)));
     });
-    console.log(this.conges);
   }
 
   create(){
