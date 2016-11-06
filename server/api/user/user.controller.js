@@ -5,6 +5,7 @@ import passport from 'passport';
 import config from '../../config/environment';
 import jwt from 'jsonwebtoken';
 
+
 function handleEntityNotFound(res) {
   return function(entity) {
     if (!entity) {

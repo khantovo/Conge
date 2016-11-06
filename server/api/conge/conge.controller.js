@@ -13,6 +13,11 @@ import _ from 'lodash';
 import moment from 'moment'
 import {Conge} from '../../sqldb';
 import {User} from '../../sqldb';
+import {CronJob} from 'cron';
+
+
+var nodemailer = require('nodemailer');
+var smtpTransport = require("nodemailer-smtp-transport");
 
 function respondWithResult(res, statusCode) {
   statusCode = statusCode || 200;
@@ -123,3 +128,76 @@ export function destroy(req, res) {
     .then(removeEntity(res))
     .catch(handleError(res));
 }
+//*
+function getNextLeave(){
+  Conge.findAll({
+    where:{
+      start:{
+        $gte: new Date(),
+        $lte: moment(new Date()).add(7, 'days')
+      }
+    },
+    include:{model:User , as:'worker'}
+  }).then(results=>{
+    var listConge= JSON.parse(JSON.stringify(results))
+
+    var htmlText="";
+    if(listConge.length>0){
+      htmlText+="<p>Liste des prochaines congés :</p>";
+      htmlText+="<ul>";
+      for(var i in listConge){
+        var actu= listConge[i];
+        htmlText+="<li> <strong> "+actu.worker.name+": </strong>";
+        htmlText+= moment(actu.start).format("DD MMM YYYY") +" - ";
+        htmlText+= moment(actu.end).format("DD MMM YYYY");
+        htmlText+=" ("+actu.duration+"jours )"+"</li>";
+      }
+      htmlText+="</ul>";
+      var configMail={
+        user:"mail@gmail.com",
+        pass:"mot de passe"
+      }
+      sendMail("khantovo3@gmail.com" , configMail , htmlText );
+    }
+  })
+}
+//*/
+function sendMail(emailDest , configMail , htmlText ){
+  var transport = nodemailer.createTransport((smtpTransport({
+    service: 'gmail',
+    auth: {
+      user: configMail.user,
+      pass: configMail.pass
+    },
+    tls: { rejectUnauthorized: false }
+  })));
+
+	var signature= '<p>Bonne journée! <br/><strong>Système de gestion des congés</strong></p>';
+
+  var mailOptions = {
+    from: configMail.user, // sender address
+    to: emailDest, // list of receivers
+    subject: "Congés à venir", // Subject line
+    html: htmlText+signature // html body
+  };
+
+  // send mail with defined transport object
+  transport.sendMail(mailOptions,function(error, info){
+    if(error){
+        return console.log(error);
+    }
+    console.log('Message sent: ' + info.response);
+});
+}
+
+getNextLeave();
+var statUpdate = new CronJob({
+    cronTime: '00 50 23 * * *', //Every day
+    onTick: function() {
+      console.log(new Date());
+        getNextLeave();
+    },
+    start: true,
+    timeZone: "Europe/Paris"
+});
+statUpdate.start(); //<<<<<<<<<<<<<<<TO ACTIVE CRON

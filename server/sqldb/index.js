@@ -8,6 +8,15 @@ import path from 'path';
 import config from '../config/environment';
 import Sequelize from 'sequelize';
 
+
+Sequelize.Promise.config({
+    // Enables all warnings except forgotten return statements.
+    warnings: {
+        wForgottenReturn: false
+    }
+});
+//*/
+
 var db = {
   Sequelize,
   sequelize: new Sequelize(config.sequelize.uri, config.sequelize.options)

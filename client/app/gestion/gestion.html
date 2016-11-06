@@ -1,8 +1,14 @@
 <div class="container">
+
   <div class="btn-group">
-    <label class="btn btn-default" ng-model="radioModel" uib-btn-radio="'Left'" uncheckable>Left</label>
-    <label class="btn btn-default" ng-model="radioModel" uib-btn-radio="'Middle'" uncheckable>Middle</label>
-    <label class="btn btn-default" ng-model="radioModel" uib-btn-radio="'Right'" uib-uncheckable="uncheckable">Right</label>
+    <label class="btn btn-default" ng-model="gestion.type"
+      ng-click="gestion.filter()" uib-btn-radio="'3'" ><strong>TOUS</strong></label>
+    <label class="btn btn-danger" ng-model="gestion.type"
+      ng-click="gestion.filter(2)" uib-btn-radio="'2'" ><strong>TERMINÉ</strong></label>
+    <label class="btn btn-success" ng-model="gestion.type"
+      ng-click="gestion.filter(0)" uib-btn-radio="'0'" ><strong>EN COURS</strong></label>
+    <label class="btn btn-warning" ng-model="gestion.type"
+      ng-click="gestion.filter(1)" uib-btn-radio="'1'" ><strong>A VENIR</strong></label>
   </div>
   <table class="table table-striped table-bordered">
     <thead>
@@ -12,6 +18,7 @@
         <th>Date de fin</th>
         <th>Jours</th>
         <th>Statut</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -39,6 +46,7 @@
           <input type="number" class="form-control" value="0"
           ng-model="gestion.newConge.duration" style="width:75px;">
         </td>
+        <td></td>
         <td>
           <a ng-click="gestion.create()" class="btn btn-primary">
             <span class="fa fa-plus fa-lg"></span>
@@ -46,23 +54,31 @@
         </td>
       </tr>
 
-      <tr ng-repeat="conge in gestion.conges">
+      <tr ng-repeat="conge in gestion.conges | orderBy:'startT'">
         <td>
-          <input type="text"  class="form-control" ng-model="conge.worker.name">
+          <input type="text"  class="form-control" ng-model="conge.worker.name" disabled>
         </td>
         <td>
-          <input type="text"  class="form-control" ng-model="conge.startDate">
+          <input type="text"  class="form-control" ng-model="conge.startDate" disabled>
         </td>
         <td>
-          <input type="text"  class="form-control" ng-model="conge.endDate">
+          <input type="text"  class="form-control" ng-model="conge.endDate" disabled>
         </td>
         <td>
-          <input type="number" class="form-control" value="0"
-          ng-model="conge.duration" style="width:75px;">
+          <input type="text" class="form-control" placeholder="0"
+          ng-model="conge.duration" disabled style="width:75px;">
         </td>
         <td>
-          <a ng-click="gestion.create()" class="btn btn-primary">
-            <span class="fa fa-plus fa-lg"></span>
+          <a class="btn btn-success" ng-if="conge.status==0" disabled>
+            <strong>EN COURS</strong>
+          <a class="btn btn-danger" ng-if="conge.status==2" disabled>
+            <strong>TERMINÉ</strong>
+          <a class="btn btn-warning" ng-if="conge.status==1" disabled>
+            <strong>A VENIR</strong>
+        </td>
+        <td>
+          <a ng-click="gestion.suppr(conge)" class="btn btn-default">
+            <span class="fa fa-trash fa-lg"></span>
           </a>
         </td>
       </tr>

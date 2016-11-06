@@ -1,5 +1,14 @@
 import passport from 'passport';
 import {Strategy as LocalStrategy} from 'passport-local';
+import Promise from 'bluebird';
+//*
+Promise.config({
+    // Enables all warnings except forgotten return statements.
+    warnings: {
+        wForgottenReturn: false
+    }
+});
+//*/
 
 function localAuthenticate(User, email, password, done) {
   User.find({
